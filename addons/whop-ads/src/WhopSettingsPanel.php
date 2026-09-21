@@ -61,7 +61,7 @@ final class WhopSettingsPanel implements SettingsPanelProvider
         $list = '';
         if (!$hasCreds) {
             $list = '<p class="honeycomb-muted" style="margin-bottom:20px;">No credentials yet. Create an API key with '
-                . '<code>event:create</code> under Whop Account API Keys, then connect below.</p>';
+                . '<code>event:create</code> and <code>ad_campaign:stats:read</code> under Whop Account API Keys, then connect below.</p>';
         } else {
             $list = '<div style="margin-bottom:20px;">';
             $list .= '<div style="font-weight:600;margin-bottom:10px;color:#333;">Connected</div>';
@@ -100,7 +100,7 @@ final class WhopSettingsPanel implements SettingsPanelProvider
                     . '<div><strong>Default event:</strong> ' . $eventDefault . '</div>'
                     . '</div></div>';
             }
-            $list .= '<p class="honeycomb-muted" style="margin:0;font-size:13px;">You\'re set. Enable “Send conversions to Whop Ads” on each campaign that uses this traffic source.</p>';
+            $list .= '<p class="honeycomb-muted" style="margin:0;font-size:13px;">You\'re set. On each campaign: enable “Send conversions to Whop Ads”, and enter the Whop <strong>ad campaign ID</strong> so spend can sync hourly.</p>';
             $list .= '</div>';
         }
 
@@ -133,7 +133,7 @@ final class WhopSettingsPanel implements SettingsPanelProvider
     <div style="margin-bottom:20px;">
         <label style="display:block;font-weight:600;margin-bottom:8px;color:#333;">API key <span style="color:#d32f2f;">*</span></label>
         <input type="password" name="api_key" required autocomplete="new-password" style="{$inputStyle}font-family:monospace;">
-        <div style="font-size:12px;color:#666;margin-top:4px;">Server-side only. Needs <code>event:create</code>. Never put this in browser code.</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;">Server-side only. Needs <code>event:create</code> (conversions) and <code>ad_campaign:stats:read</code> (spend). Never put this in browser code.</div>
     </div>
 
     <div style="margin-bottom:24px;">
@@ -250,7 +250,7 @@ HTML;
             return [
                 'ok' => true,
                 'message' => 'Whop credential saved, linked to traffic source #' . $trafficSourceId
-                    . '. Enable “Send conversions to Whop” on each campaign.',
+                    . '. Enable conversion export and paste the Whop ad campaign ID on each campaign for spend sync.',
             ];
         } catch (Throwable $e) {
             return ['ok' => false, 'message' => $e->getMessage()];
@@ -334,7 +334,7 @@ HTML;
             return $ts->create([
                 'name' => (string) ($template['name'] ?? 'Whop Ads'),
                 'provider_key' => 'whop',
-                'cost_tracking_method' => 'manual_token',
+                'cost_tracking_method' => 'integrated_api',
                 'cost_param_key' => '',
                 'cost_currency' => (string) ($template['cost_currency'] ?? 'USD'),
                 'tokens' => $templateTokens,
@@ -356,7 +356,7 @@ HTML;
         $ts->update($id, [
             'name' => $existing['name'] ?? (string) ($template['name'] ?? 'Whop Ads'),
             'provider_key' => 'whop',
-            'cost_tracking_method' => $existing['cost_tracking_method'] ?? 'manual_token',
+            'cost_tracking_method' => 'integrated_api',
             'tokens' => $existingTokens,
             'postback_template' => $existing['postback_template'] ?? null,
             'cost_param_key' => $existing['cost_param_key'] ?? '',

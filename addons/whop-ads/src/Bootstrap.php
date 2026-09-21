@@ -13,6 +13,8 @@ final class Bootstrap implements AddonBootstrap
     {
         $db = $kernel->db();
         $kernel->addConversionExportProvider(new WhopConversionExporter($db));
+        $kernel->addCostSyncJob(new WhopCostSyncJob($db));
         $kernel->addSettingsPanel(new WhopSettingsPanel($db));
+        // Spend overlay uses core HoneycombCostAggregator + honeycomb_campaign_hourly_costs.
     }
 }

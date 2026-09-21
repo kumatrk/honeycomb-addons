@@ -7,13 +7,16 @@ namespace Honeycomb\Whop;
 use RuntimeException;
 
 /**
- * Whop Events API client (server-side conversion reporting).
+ * Whop API client: Events (conversions) + Ad Reports (spend).
  *
  * @see https://docs.whop.com/developer/ads/events-api
+ * @see https://docs.whop.com/api-reference/ad-reports/retrieve-ad-report
  */
 final class WhopClient
 {
-    private const EVENTS_URL = 'https://api.whop.com/api/v1/events';
+    private const API_BASE = 'https://api.whop.com/api/v1';
+    private const EVENTS_URL = self::API_BASE . '/events';
+    private const AD_REPORTS_URL = self::API_BASE . '/ad_reports';
 
     public function __construct(private string $apiKey)
     {
@@ -39,29 +42,144 @@ final class WhopClient
             ];
         }
 
-        $ch = curl_init(self::EVENTS_URL);
+        $result = $this->request('POST', self::EVENTS_URL, $json, true);
+        $decoded = $result['decoded'];
+        $remoteId = null;
+        if (is_array($decoded) && isset($decoded['id']) && is_scalar($decoded['id'])) {
+            $remoteId = (string) $decoded['id'];
+        }
+
+        return [
+            'ok' => $result['ok'],
+            'http_status' => $result['http_status'],
+            'remote_id' => $remoteId,
+            'error' => $result['error'],
+            'body' => $result['body'],
+        ];
+    }
+
+    /**
+     * Daily (or hourly) spend report for one Whop ad campaign.
+     *
+     * @return list<array{date: string, spend: float, currency: ?string}>
+     */
+    public function campaignSpendByDay(
+        string $adCampaignId,
+        string $fromUtc,
+        string $toUtc,
+        string $granularity = 'daily'
+    ): array {
+        $adCampaignId = trim($adCampaignId);
+        if ($adCampaignId === '') {
+            throw new RuntimeException('Whop ad campaign id is required.');
+        }
+
+        $query = http_build_query([
+            'from' => $fromUtc,
+            'to' => $toUtc,
+            'granularity' => $granularity,
+        ]);
+        $url = self::AD_REPORTS_URL . '?' . $query . '&ad_campaign_ids=' . rawurlencode($adCampaignId);
+
+        $result = $this->request('GET', $url, null, false);
+        if (!$result['ok']) {
+            throw new RuntimeException($result['error'] ?? ('Whop ad_reports HTTP ' . $result['http_status']));
+        }
+
+        $decoded = $result['decoded'];
+        if (!is_array($decoded)) {
+            throw new RuntimeException('Whop ad_reports returned invalid JSON.');
+        }
+
+        return $this->parseGranularitySpend($decoded);
+    }
+
+    /**
+     * @param array<string, mixed> $decoded
+     * @return list<array{date: string, spend: float, currency: ?string}>
+     */
+    private function parseGranularitySpend(array $decoded): array
+    {
+        $series = $decoded['granularity'] ?? null;
+        if (!is_array($series) || $series === []) {
+            return [];
+        }
+
+        $out = [];
+        foreach ($series as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $date = $this->bucketDate($row);
+            if ($date === null) {
+                continue;
+            }
+            $spend = (float) ($row['spend'] ?? 0);
+            $currency = isset($row['spend_currency']) && is_scalar($row['spend_currency'])
+                ? (string) $row['spend_currency']
+                : null;
+            $out[] = [
+                'date' => $date,
+                'spend' => $spend,
+                'currency' => $currency !== '' ? $currency : null,
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function bucketDate(array $row): ?string
+    {
+        foreach (['stat_date', 'bucket_start', 'date'] as $key) {
+            if (empty($row[$key]) || !is_scalar($row[$key])) {
+                continue;
+            }
+            $raw = (string) $row[$key];
+            if (preg_match('/^(\d{4}-\d{2}-\d{2})/', $raw, $m) === 1) {
+                return $m[1];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return array{ok: bool, http_status: int, error: ?string, body: string, decoded: mixed}
+     */
+    private function request(string $method, string $url, ?string $jsonBody, bool $isJsonPost): array
+    {
+        $ch = curl_init($url);
         if ($ch === false) {
             return [
                 'ok' => false,
                 'http_status' => 0,
-                'remote_id' => null,
                 'error' => 'curl_init failed.',
                 'body' => '',
+                'decoded' => null,
             ];
         }
 
-        curl_setopt_array($ch, [
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                'Authorization: Bearer ' . $this->apiKey,
-                'Content-Type: application/json',
-                'Accept: application/json',
-            ],
-            CURLOPT_POSTFIELDS => $json,
+        $headers = [
+            'Authorization: Bearer ' . $this->apiKey,
+            'Accept: application/json',
+        ];
+        if ($isJsonPost) {
+            $headers[] = 'Content-Type: application/json';
+        }
+
+        $opts = [
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => $headers,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 20,
-            CURLOPT_CONNECTTIMEOUT => 8,
-        ]);
+            CURLOPT_TIMEOUT => 45,
+            CURLOPT_CONNECTTIMEOUT => 10,
+        ];
+        if ($jsonBody !== null) {
+            $opts[CURLOPT_POSTFIELDS] = $jsonBody;
+        }
+        curl_setopt_array($ch, $opts);
 
         $body = curl_exec($ch);
         $errno = curl_errno($ch);
@@ -73,19 +191,14 @@ final class WhopClient
             return [
                 'ok' => false,
                 'http_status' => $status,
-                'remote_id' => null,
                 'error' => 'Network error: ' . $err,
                 'body' => is_string($body) ? self::sanitizeBody($body) : '',
+                'decoded' => null,
             ];
         }
 
         $bodyStr = is_string($body) ? $body : '';
         $decoded = json_decode($bodyStr, true);
-        $remoteId = null;
-        if (is_array($decoded) && isset($decoded['id']) && is_scalar($decoded['id'])) {
-            $remoteId = (string) $decoded['id'];
-        }
-
         $ok = $status >= 200 && $status < 300;
         $error = null;
         if (!$ok) {
@@ -95,9 +208,9 @@ final class WhopClient
         return [
             'ok' => $ok,
             'http_status' => $status,
-            'remote_id' => $remoteId,
             'error' => $error,
             'body' => self::sanitizeBody($bodyStr),
+            'decoded' => $decoded,
         ];
     }
 

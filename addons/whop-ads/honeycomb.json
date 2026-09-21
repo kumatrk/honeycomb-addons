@@ -1,13 +1,14 @@
 {
   "slug": "whop-ads",
   "name": "Whop Ads",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "traffic_source",
   "provider_key": "whop",
   "min_kuma": "1.1.5",
-  "summary": "Send affiliate conversions to Whop Events API for Whop Ads attribution (pixel _wuid + original landing URL).",
+  "summary": "Whop Ads: send conversions via Events API and sync ad spend from Ad Reports into Kuma stats.",
   "provides": [
     "conversion_export",
+    "cost_sync",
     "settings_panel",
     "campaign_fields"
   ],
