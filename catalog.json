@@ -1,6 +1,6 @@
 {
     "schema_version": 1,
-    "updated_at": "2026-09-21T19:11:34Z",
+    "updated_at": "2026-09-21T19:51:12Z",
     "description": "Honeycomb addons for Simple Kuma. Kuma fetches this file as JSON only and never executes PHP from this repo.",
     "addons": [
         {
@@ -17,13 +17,13 @@
         {
             "slug": "whop-ads",
             "name": "Whop Ads",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "type": "traffic_source",
             "provider_key": "whop",
             "min_kuma": "1.1.5",
-            "summary": "Send affiliate conversions to Whop Events API for Whop Ads attribution (pixel _wuid + original landing URL).",
-            "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/whop-ads-1.0.0/whop-ads.zip",
-            "sha256": "1ed83523a2743acce34a79e1423af26901d211abeb0c14f11d87f2343cacdefa"
+            "summary": "Whop Ads: send conversions via Events API and sync ad spend from Ad Reports into Kuma stats.",
+            "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/whop-ads-1.1.0/whop-ads.zip",
+            "sha256": "b75daa6c87b95cdbdbbfd615132c9e838f05eac76bfb290f091155cc760891df"
         }
     ]
 }
