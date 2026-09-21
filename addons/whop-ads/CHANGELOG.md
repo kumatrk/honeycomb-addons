@@ -5,6 +5,11 @@ All notable changes to this Honeycomb addon are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-09-21
+
+### Added
+- `CHANGELOG.md` included in the published zip so operators can read history after import.
+
 ## [1.1.0] - 2026-09-21
 
 ### Added
