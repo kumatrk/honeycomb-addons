@@ -1,6 +1,29 @@
 {
-  "schema_version": 1,
-  "updated_at": "2026-09-08T00:00:00Z",
-  "description": "Honeycomb addons for Simple Kuma. Kuma fetches this file as JSON only and never executes PHP from this repo.",
-  "addons": []
+    "schema_version": 1,
+    "updated_at": "2026-09-21T19:11:34Z",
+    "description": "Honeycomb addons for Simple Kuma. Kuma fetches this file as JSON only and never executes PHP from this repo.",
+    "addons": [
+        {
+            "slug": "taboola-cost",
+            "name": "Taboola Cost API",
+            "version": "1.0.0",
+            "type": "traffic_source",
+            "provider_key": "taboola",
+            "min_kuma": "1.1.5",
+            "summary": "Pull Taboola Backstage campaign spend into Kuma via Honeycomb (client credentials + campaign bindings).",
+            "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/taboola-cost-1.0.0/taboola-cost.zip",
+            "sha256": "0075a9ac4493298e4ab6463a611c9a62d757fec638a28792d6e68b9ea934181e"
+        },
+        {
+            "slug": "whop-ads",
+            "name": "Whop Ads",
+            "version": "1.0.0",
+            "type": "traffic_source",
+            "provider_key": "whop",
+            "min_kuma": "1.1.5",
+            "summary": "Send affiliate conversions to Whop Events API for Whop Ads attribution (pixel _wuid + original landing URL).",
+            "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/whop-ads-1.0.0/whop-ads.zip",
+            "sha256": "1ed83523a2743acce34a79e1423af26901d211abeb0c14f11d87f2343cacdefa"
+        }
+    ]
 }

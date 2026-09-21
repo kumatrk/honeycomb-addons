@@ -1,0 +1,21 @@
+{
+  "slug": "taboola-cost",
+  "name": "Taboola Cost API",
+  "version": "1.0.0",
+  "type": "traffic_source",
+  "provider_key": "taboola",
+  "min_kuma": "1.1.5",
+  "summary": "Pull Taboola Backstage campaign spend into Kuma via Honeycomb (client credentials + campaign bindings).",
+  "provides": [
+    "cost_sync",
+    "cost_overlay",
+    "settings_panel",
+    "campaign_fields"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Honeycomb\\Taboola\\": "src/"
+    }
+  },
+  "bootstrap": "Honeycomb\\Taboola\\Bootstrap"
+}

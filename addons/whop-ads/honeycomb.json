@@ -1,0 +1,20 @@
+{
+  "slug": "whop-ads",
+  "name": "Whop Ads",
+  "version": "1.0.0",
+  "type": "traffic_source",
+  "provider_key": "whop",
+  "min_kuma": "1.1.5",
+  "summary": "Send affiliate conversions to Whop Events API for Whop Ads attribution (pixel _wuid + original landing URL).",
+  "provides": [
+    "conversion_export",
+    "settings_panel",
+    "campaign_fields"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Honeycomb\\Whop\\": "src/"
+    }
+  },
+  "bootstrap": "Honeycomb\\Whop\\Bootstrap"
+}

@@ -2,47 +2,25 @@
 
 Catalog of Simple Kuma Honeycomb addons. Kuma reads this repo from the Honeycomb page.
 
-Kuma core updates stay on [`kumatrk/initialrelease`](https://github.com/kumatrk/initialrelease). Addons (traffic sources first, later other integrations) are published here so they can be imported and updated **without** a full Kuma zip.
+Kuma core updates stay on [`kumatrk/initialrelease`](https://github.com/kumatrk/initialrelease). Addons are published here so they can be imported and updated **without** a full Kuma zip.
 
 ## How Kuma uses this repo
 
 1. The Honeycomb page fetches [`catalog.json`](catalog.json) over HTTPS (JSON only).
 2. The user clicks **Import** on an addon they want.
-3. Kuma downloads that addon’s zip, checks `sha256`, and extracts into `honeycomb/addons/` on the install.
+3. Kuma downloads that addon zip, checks `sha256`, and extracts into `honeycomb/addons/` on the install.
 
 Nothing in this repo is executed until it is installed locally on a Kuma server.
 
-## Catalog format
+## Published addons
 
-```json
-{
-  "schema_version": 1,
-  "updated_at": "2026-09-08T00:00:00Z",
-  "addons": [
-    {
-      "slug": "example-cost",
-      "name": "Example Cost API",
-      "version": "1.0.0",
-      "type": "traffic_source",
-      "provider_key": "example",
-      "min_kuma": "1.1.6",
-      "summary": "Pull spend from Example.",
-      "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/example-cost-1.0.0/example-cost.zip",
-      "sha256": "64-char-hex"
-    }
-  ]
-}
-```
+| Slug | Version | Provider |
+|------|---------|----------|
+| `taboola-cost` | 1.0.0 | Taboola Backstage cost sync |
+| `whop-ads` | 1.0.0 | Whop Ads conversion export |
 
-`addons` is empty until the first addon ships.
+Source for each addon also lives under `addons/<slug>/`. Installable packages are GitHub Release zip assets referenced from `catalog.json`.
 
-## Addon layout (when we add one)
+## Requirements
 
-```
-addons/example-cost/
-  honeycomb.json
-  src/
-  migrations/
-```
-
-Each addon zip must contain `honeycomb.json` at the root (or one wrapping folder).
+These addons need a Kuma install that already includes the Honeycomb core (kernel, migrations, Honeycomb UI). They will not work on older public zips that do not yet ship Honeycomb.
