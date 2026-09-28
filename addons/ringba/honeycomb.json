@@ -1,0 +1,18 @@
+{
+  "slug": "ringba",
+  "name": "Ringba",
+  "version": "1.1.1",
+  "type": "utility",
+  "min_kuma": "1.1.5",
+  "summary": "Pay-per-call helper: optional Ringba API campaign pickers, LP scripts with click_id tagging, and pixels into Kuma postbacks.",
+  "provides": [
+    "settings_panel",
+    "campaign_fields"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Honeycomb\\Ringba\\": "src/"
+    }
+  },
+  "bootstrap": "Honeycomb\\Ringba\\Bootstrap"
+}

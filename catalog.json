@@ -1,29 +1,40 @@
-{
-    "schema_version": 1,
-    "updated_at": "2026-09-21T20:04:53Z",
-    "description": "Honeycomb addons for Simple Kuma. Kuma fetches this file as JSON only and never executes PHP from this repo.",
-    "addons": [
-        {
-            "slug": "taboola-cost",
-            "name": "Taboola Cost API",
-            "version": "1.0.1",
-            "type": "traffic_source",
-            "provider_key": "taboola",
-            "min_kuma": "1.1.5",
-            "summary": "Pull Taboola Backstage campaign spend into Kuma via Honeycomb (client credentials + campaign bindings).",
-            "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/taboola-cost-1.0.1/taboola-cost.zip",
-            "sha256": "9c9dbf1652eb30b2c8af17b4b6dc86485a3b417f2e1d7cc4f988a4f7485be737"
-        },
-        {
-            "slug": "whop-ads",
-            "name": "Whop Ads",
-            "version": "1.1.1",
-            "type": "traffic_source",
-            "provider_key": "whop",
-            "min_kuma": "1.1.5",
-            "summary": "Whop Ads: send conversions via Events API and sync ad spend from Ad Reports into Kuma stats.",
-            "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/whop-ads-1.1.1/whop-ads.zip",
-            "sha256": "c4cea35f57ea1d88362a05852fbe299ae910a6c6733107c44ff4da13889f2e0f"
-        }
-    ]
+﻿{
+  "schema_version": 1,
+  "updated_at": "2026-09-28T21:10:14Z",
+  "description": "Honeycomb addons for Simple Kuma. Kuma fetches this file as JSON only and never executes PHP from this repo.",
+  "addons": [
+    {
+      "slug": "taboola-cost",
+      "name": "Taboola Cost API",
+      "version": "1.0.1",
+      "type": "traffic_source",
+      "provider_key": "taboola",
+      "min_kuma": "1.1.5",
+      "summary": "Pull Taboola Backstage campaign spend into Kuma via Honeycomb (client credentials + campaign bindings).",
+      "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/taboola-cost-1.0.1/taboola-cost.zip",
+      "sha256": "9c9dbf1652eb30b2c8af17b4b6dc86485a3b417f2e1d7cc4f988a4f7485be737"
+    },
+    {
+      "slug": "whop-ads",
+      "name": "Whop Ads",
+      "version": "1.1.1",
+      "type": "traffic_source",
+      "provider_key": "whop",
+      "min_kuma": "1.1.5",
+      "summary": "Whop Ads: send conversions via Events API and sync ad spend from Ad Reports into Kuma stats.",
+      "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/whop-ads-1.1.1/whop-ads.zip",
+      "sha256": "c4cea35f57ea1d88362a05852fbe299ae910a6c6733107c44ff4da13889f2e0f"
+    },
+    {
+      "slug": "ringba",
+      "name": "Ringba",
+      "version": "1.1.1",
+      "type": "utility",
+      "provider_key": "",
+      "min_kuma": "1.1.5",
+      "summary": "Pay-per-call helper: optional Ringba API campaign pickers, LP scripts with click_id tagging, and pixels into Kuma postbacks.",
+      "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/ringba-1.1.1/ringba.zip",
+      "sha256": "b4a84a765ef20c9642fe84d39f6a24aab8329a86817a572af751797febb645d4"
+    }
+  ]
 }
