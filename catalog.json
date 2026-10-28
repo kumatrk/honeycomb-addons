@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-09-28T21:17:00Z",
+  "updated_at": "2026-10-28T21:30:00Z",
   "description": "Honeycomb addons for Simple Kuma. Kuma fetches this file as JSON only and never executes PHP from this repo.",
   "addons": [
     {
@@ -35,6 +35,17 @@
       "summary": "Pay-per-call helper: optional Ringba API campaign pickers, LP scripts with click_id tagging, and pixels into Kuma postbacks.",
       "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/ringba-1.1.1/ringba.zip",
       "sha256": "b4a84a765ef20c9642fe84d39f6a24aab8329a86817a572af751797febb645d4"
+    },
+    {
+      "slug": "deep-funnels",
+      "name": "Kuma Deep Funnels",
+      "version": "1.0.12",
+      "type": "utility",
+      "provider_key": "",
+      "min_kuma": "1.1.5",
+      "summary": "Multi-level landing page funnels inside one campaign (up to 5 levels × 5 LPs). Opaque link keys + Link code helper. Full path tracking and Funnel stats tab.",
+      "zip_url": "https://github.com/kumatrk/honeycomb-addons/releases/download/deep-funnels-1.0.12/deep-funnels.zip",
+      "sha256": "337640eb7859a8751dedc25c87eff11ecbd128b4a9d2da64963c85c52697463d"
     }
   ]
 }
